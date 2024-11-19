@@ -31,7 +31,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 Can change the font library by altering it in the css or import a different library and replace it in index.html
 
 ### Icons
-Use 'npm install @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome' to download the correct library for the settings icon.
+Use `npm install @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome` to download the correct library for the settings icon.
 
 
 
