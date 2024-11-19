@@ -1,6 +1,7 @@
 // IMPORTS ------------------------------------------------------------------------------------------------------ 
 import React, { useState } from 'react';
 import './App.css';
+import Settings from "./Settings";
 import haulmasterImage from './haulmaster.png'; 
 import wolverineImage from './wolverine.png'; 
 import elmersLogo from './elmers.jpg'; 
@@ -30,7 +31,7 @@ function App() {
         { label: 'Empty Weight w/ 36" Transfer Tracks', value: '28,600 lbs' },
         { label: 'Empty Weight w/ Tires & Wheels (1250 Tires)', value: '22,100 lbs' },
         { label: 'Empty Weight w/ Row Crop Tandem (520 Tires)', value: '24,900 lbs' },
-        { label: 'Empty Weight w/ Steerable Inlinie Tandem', value: '26,400 lbs' },
+        { label: 'Empty Weight w/ Steerable Inline Tandem', value: '26,400 lbs' },
         { label: 'Tongue Weight', value: '4,000 lbs' },
         { label: 'Unloading Auger', value: '22”' },
         { label: 'Horizontal Auger', value: '22"' },
@@ -92,6 +93,9 @@ function App() {
 
   return (
     <div className="App">
+
+      <Settings />
+
       <header className="App-header">
         {/* Elmers Logo Styling */}
         <img src={elmersLogo} alt="Elmer's Manufacturing Logo" className="title-image" />
