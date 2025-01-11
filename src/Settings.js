@@ -1,5 +1,5 @@
 // IMPORTS ------------------------------------------------------------------------------------------------------ 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
 import machineImage from "./load-placement.jpg"; 
@@ -21,37 +21,127 @@ const Settings = () => {
   const [loadPosition, setLoadPosition] = useState(1);
   const [ptoRPM, setPtoRPM] = useState(defaultPTOValue); 
   const [ptoStatus, setPtoStatus] = useState(false); 
-  const [frontWeight, setFrontWeight] = useState(defaultWeight / 2);
-  const [rearWeight, setRearWeight] = useState(defaultWeight / 2); 
+  const [weight, setWeight] = useState(defaultWeight);
   const [cropFillRate, setCropFillRate] = useState(defaultCropFillRate); 
 
   // FUNCTIONS -------------------------------------------------------------------------------------------------
+  const handleSubmitPTO = async () => 
+  {
+    setPtoStatus(!ptoStatus)
+
+    try {
+      const response = await fetch('http://192.168.100.139:8020/set-pto', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify( {value: !ptoStatus} ),
+      });
+
+      const data = await response.json();
+      console.log('PTO set:', data);
+      //alert('PTO successfully set.');
+    } catch (error) 
+    {
+      console.error('Error setting PTO:', error);
+      alert('Failed to set PTO. Check console for details.');
+    }
+  };
+  
   const togglePopup = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleWeightChange = (delta) => {
-    const newRearWeight = rearWeight + delta * cropFillRate/2;
-    const newFrontWeight = frontWeight + delta * cropFillRate/2;
-    if (newRearWeight <= maxWeight && newRearWeight >= 0 && newFrontWeight <= maxWeight && newFrontWeight >= 0) 
+  const handleWeightChange = (delta) => 
+  {
+    setWeight(weight + delta*cropFillRate);
+  };
+
+  const handleSubmitFrontWeight = async () =>
+  {
+    try {
+      const response = await fetch('http://192.168.100.139:8020/set-front-weight', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify( {value: weight/2} ),
+      });
+
+      const data = await response.json();
+      console.log('Front Weight set:', data);
+      //alert('Front Weight successfully set.');
+    } catch (error) 
     {
-      setRearWeight(newRearWeight);
-      setFrontWeight(newFrontWeight);
+      console.error('Error setting Front Weight:', error);
+      alert('Failed to set Front Weight. Check console for details.');
     }
   };
 
+  const handleSubmitRearWeight = async () =>
+  {
+    try {
+      const response = await fetch('http://192.168.100.139:8020/set-rear-weight', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify( {value: weight/2} ),
+      });
+
+      const data = await response.json();
+      console.log('Rear Weight set:', data);
+      //alert('Rear Weight successfully set.');
+    } catch (error) 
+    {
+      console.error('Error setting Rear Weight:', error);
+      alert('Failed to set Rear Weight. Check console for details.');
+    }
+  };
+
+  useEffect(() => {
+    //console.log("Weight Updated: ", weight);
+    handleSubmitFrontWeight();
+    handleSubmitRearWeight();
+  }, [weight]);
+
+  const handleCropFillRateChange = (delta) => 
+  {
+    setCropFillRate(cropFillRate + delta);
+  }
+
+  const handleSubmitCropFillRate = async () =>
+  {
+    try {
+      const response = await fetch('http://192.168.100.139:8020/set-crop-fill-rate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify( {value: cropFillRate} ),
+      });
+
+      const data = await response.json();
+      console.log('Crop Fill Rate set:', data);
+      //alert('Crop Fill Rate successfully set.');
+    } catch (error) 
+    {
+      console.error('Error setting Crop Fill Rate:', error);
+      alert('Failed to set Crop Fill Rate. Check console for details.');
+    }
+  };
+
+  useEffect(() => {
+    //console.log("Crop Fill Rate Updated: ", cropFillRate);
+    handleSubmitCropFillRate();
+  }, [cropFillRate]);
+
   const handleQuickLoad = () => {
-    const quickLoadWeight = maxWeight / 2; 
-    setRearWeight(quickLoadWeight);
-    setFrontWeight(quickLoadWeight);
+    setWeight(maxWeight);
   };
 
   const handlePtoChange = (event) => {
     setPtoRPM(event.target.value);
-  };
-
-  const handlePtoToggle = () => {
-    setPtoStatus(!ptoStatus);
   };
 
   const handleReset = () => {
@@ -100,7 +190,7 @@ const Settings = () => {
                 <div className = "title">Weight</div>
                 <div className = "buttons">
                   <button onClick={() => handleWeightChange(-1)}>-</button>
-                  <div className = "value">{frontWeight + rearWeight} kg</div>
+                  <div className = "weight-value">{weight} kg</div>
                   <button onClick = {() => handleWeightChange(1)}>+</button>
                 </div>
                 <button className = "quick-load-button" onClick = {handleQuickLoad}>
@@ -122,7 +212,7 @@ const Settings = () => {
                 />
                 <button
                   className = {`pto-toggle-button ${ptoStatus ? "pto-on" : "pto-off"}`}
-                  onClick = {handlePtoToggle}
+                  onClick = {handleSubmitPTO}
                 >
                   {ptoStatus ? "PTO On" : "PTO Off"}
                 </button>
@@ -132,9 +222,9 @@ const Settings = () => {
               <div className = "crop-fill-rate-section">
                 <div className = "title">Crop Fill Rate</div>
                 <div className = "buttons">
-                  <button onClick = {() => setCropFillRate((prev) => Math.max(prev - 1, 0))}>-</button>
-                  <div className = "value">{cropFillRate} kg</div>
-                  <button onClick = {() => setCropFillRate((prev) => Math.min(prev + 1, 100))}>+</button>
+                  <button onClick = {() => handleCropFillRateChange(-1)}>-</button>
+                  <div className = "crop-fill-value">{cropFillRate} kg</div>
+                  <button onClick = {() => handleCropFillRateChange(1)}>+</button>
                 </div>
                 <button className = "reset-button" onClick = {handleReset}>
                   Reset

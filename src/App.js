@@ -1,5 +1,5 @@
 // IMPORTS ------------------------------------------------------------------------------------------------------ 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Settings from "./Settings";
 import haulmasterImage from './haulmaster.png'; 
@@ -12,12 +12,6 @@ function App() {
   // DEFAULT STATE INITIALIZATION ------------------------------------------------------------------------------
   const [machineType, setSelectedMachine] = useState('Haulmaster');
   const [machineSize, setSelectedSize] = useState('1100'); 
-
-  const [frontWeight, setFrontWeight] = useState(1000.0);
-  const [rearWeight, setRearWeight] = useState(1000.0);  
-  const [ptoStatus, setPtoStatus] = useState(false); 
-  const [cropFillRate, setCropFillRate] = useState(50.0); 
-
 
   // MACHINE DEFINITIONS ---------------------------------------------------------------------------------------
   const machines = {
@@ -103,6 +97,31 @@ function App() {
     setSelectedSize(machines[machineNames[prevIndex]].sizes[0]);
   };
 
+  const handleSubmitMachineSwap = async () =>
+  {
+    try {
+      const response = await fetch('http://192.168.100.139:8020/set-machine-type', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify( {value: machineType} ),
+      });
+
+      const data = await response.json();
+      console.log('Machine Type set:', data);
+      //alert('Machine Type successfully set.');
+    } catch (error) 
+    {
+      console.error('Error setting Machine Type:', error);
+      alert('Failed to set Machine Type. Check console for details.');
+    }
+  };
+
+  useEffect(() => {
+      handleSubmitMachineSwap();
+    }, [machineType]);
+  
   // SIZE SWAP --------------------------------------------------------------------------------------------------
   const nextSize = () => {
     const availableSizes = machines[machineType].sizes;
@@ -133,16 +152,16 @@ function App() {
 
         {/* Machine Selection Styling */}
         <div className = "machine-carousel">
-          <button className = "main-arrow-button" onClick={prevMachine}>←</button>
+          <button className = "main-arrow-button" onClick = {prevMachine}>←</button>
           <span className = "machine-name">{machineType}</span>
-          <button className = "main-arrow-button" onClick={nextMachine}>→</button>
+          <button className = "main-arrow-button" onClick = {nextMachine}>→</button>
         </div>
 
         {/* Size Selection Styling */}
         <div className = "size-carousel">
-          <button className = "main-arrow-button" onClick={prevSize}>←</button>
+          <button className = "main-arrow-button" onClick = {prevSize}>←</button>
           <span className = "size-name">{machineSize}</span>
-          <button className = "main-arrow-button" onClick={nextSize}>→</button>
+          <button className = "main-arrow-button" onClick = {nextSize}>→</button>
         </div>
 
         {/* Display Image and Specifications Styling */}
