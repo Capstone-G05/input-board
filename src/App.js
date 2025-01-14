@@ -18,6 +18,7 @@ function App() {
     Haulmaster: {
       sizes: ['1100', '2000'],
       image: haulmasterImage,
+      maxWeight: {'1100': 30000, '2000': 55000},
       specifications: {
         '1100': [
           { label: 'Width', value: '12\' 2”' },
@@ -68,6 +69,7 @@ function App() {
     Wolverine: {
       sizes: ['1500'],
       image: wolverineImage,
+      maxWeight: {'1500': 2000},
       specifications: {
         '1500': [
           { label: 'Max Load', value: '12 tons' },
@@ -109,12 +111,12 @@ function App() {
       });
 
       const data = await response.json();
-      console.log('Machine Type set:', data);
+      // -> console.log('Machine Type set:', data);
       //alert('Machine Type successfully set.');
     } catch (error) 
     {
-      console.error('Error setting Machine Type:', error);
-      alert('Failed to set Machine Type. Check console for details.');
+      // -> console.error('Error setting Machine Type:', error);
+      // -> alert('Failed to set Machine Type. Check console for details.');
     }
   };
 
@@ -137,11 +139,13 @@ function App() {
     setSelectedSize(availableSizes[prevIndex]);
   };
 
+  const maxWeight = machines[machineType]?.maxWeight[machineSize] || 0;
+
   // PAGE LAYOUT ------------------------------------------------------------------------------------------------
   return (
     <div className="App">
 
-      <Settings />
+      <Settings maxWeight = {maxWeight}/>
 
       <header className="App-header">
         {/* Elmers Logo Styling */}

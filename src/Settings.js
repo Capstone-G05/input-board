@@ -6,10 +6,8 @@ import machineImage from "./load-placement.jpg";
 import "./Settings.css";
 
 // SETTINGS -----------------------------------------------------------------------------------------------------
-const Settings = () => {
-
+const Settings = ( {maxWeight} ) => {
   // CONSTANTS --------------------------------------------------------------------------------------------------
-  const maxWeight = 2000.0;
   const defaultCropFillRate = 50.0;
   const defaultPTOValue = 1000;
   const minPTO = 0;
@@ -21,7 +19,8 @@ const Settings = () => {
   const [loadPosition, setLoadPosition] = useState(1);
   const [ptoRPM, setPtoRPM] = useState(defaultPTOValue); 
   const [ptoStatus, setPtoStatus] = useState(false); 
-  const [weight, setWeight] = useState(defaultWeight);
+  const [frontWeight, setFrontWeight] = useState(defaultWeight/2);
+  const [rearWeight, setRearWeight] = useState(defaultWeight/2);
   const [cropFillRate, setCropFillRate] = useState(defaultCropFillRate); 
 
   // FUNCTIONS -------------------------------------------------------------------------------------------------
@@ -54,7 +53,21 @@ const Settings = () => {
 
   const handleWeightChange = (delta) => 
   {
-    setWeight(weight + delta*cropFillRate);
+    // Back Loaded
+    if (loadPosition == 0)
+    {
+      setFrontWeight(frontWeight + (1/3)*delta*cropFillRate)
+      setRearWeight(rearWeight + (2/3)*delta*cropFillRate)
+    }
+    else if (loadPosition == 2)
+    {
+      setFrontWeight(frontWeight + (2/3)*delta*cropFillRate)
+      setRearWeight(rearWeight + (1/3)*delta*cropFillRate)
+    }
+    else{
+      setFrontWeight(frontWeight + (1/2)*delta*cropFillRate)
+      setRearWeight(rearWeight + (1/2)*delta*cropFillRate)
+    }
   };
 
   const handleSubmitFrontWeight = async () =>
@@ -65,16 +78,16 @@ const Settings = () => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify( {value: weight/2} ),
+        body: JSON.stringify( {value: frontWeight} ),
       });
 
       const data = await response.json();
-      console.log('Front Weight set:', data);
+      // -> console.log('Front Weight set:', data);
       //alert('Front Weight successfully set.');
     } catch (error) 
     {
-      console.error('Error setting Front Weight:', error);
-      alert('Failed to set Front Weight. Check console for details.');
+      // -> console.error('Error setting Front Weight:', error);
+      // -> alert('Failed to set Front Weight. Check console for details.');
     }
   };
 
@@ -86,24 +99,28 @@ const Settings = () => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify( {value: weight/2} ),
+        body: JSON.stringify( {value: rearWeight} ),
       });
 
       const data = await response.json();
-      console.log('Rear Weight set:', data);
+      // -> console.log('Rear Weight set:', data);
       //alert('Rear Weight successfully set.');
     } catch (error) 
     {
-      console.error('Error setting Rear Weight:', error);
-      alert('Failed to set Rear Weight. Check console for details.');
+      // -> console.error('Error setting Rear Weight:', error);
+      // -> alert('Failed to set Rear Weight. Check console for details.');
     }
   };
 
   useEffect(() => {
     //console.log("Weight Updated: ", weight);
     handleSubmitFrontWeight();
+  }, [frontWeight]);
+
+  useEffect(() => {
+    //console.log("Weight Updated: ", weight);
     handleSubmitRearWeight();
-  }, [weight]);
+  }, [rearWeight]);
 
   const handleCropFillRateChange = (delta) => 
   {
@@ -122,12 +139,12 @@ const Settings = () => {
       });
 
       const data = await response.json();
-      console.log('Crop Fill Rate set:', data);
+      // -> console.log('Crop Fill Rate set:', data);
       //alert('Crop Fill Rate successfully set.');
     } catch (error) 
     {
-      console.error('Error setting Crop Fill Rate:', error);
-      alert('Failed to set Crop Fill Rate. Check console for details.');
+      // -> console.error('Error setting Crop Fill Rate:', error);
+      // -> alert('Failed to set Crop Fill Rate. Check console for details.');
     }
   };
 
@@ -137,7 +154,8 @@ const Settings = () => {
   }, [cropFillRate]);
 
   const handleQuickLoad = () => {
-    setWeight(maxWeight);
+    setFrontWeight(maxWeight/2)
+    setRearWeight(maxWeight/2);
   };
 
   const handlePtoChange = (event) => {
@@ -190,7 +208,7 @@ const Settings = () => {
                 <div className = "title">Weight</div>
                 <div className = "buttons">
                   <button onClick={() => handleWeightChange(-1)}>-</button>
-                  <div className = "weight-value">{weight} kg</div>
+                  <div className = "weight-value">{frontWeight + rearWeight} kg</div>
                   <button onClick = {() => handleWeightChange(1)}>+</button>
                 </div>
                 <button className = "quick-load-button" onClick = {handleQuickLoad}>
