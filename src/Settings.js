@@ -29,7 +29,7 @@ const Settings = ( {maxWeight} ) => {
     setPtoStatus(!ptoStatus)
 
     try {
-      const response = await fetch('http://192.168.100.139:8020/set-pto', {
+      const response = await fetch('http://localhost:8020/set-pto', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ const Settings = ( {maxWeight} ) => {
   const handleSubmitFrontWeight = async () =>
   {
     try {
-      const response = await fetch('http://192.168.100.139:8020/set-front-weight', {
+      const response = await fetch('http://localhost:8020/set-front-weight', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ const Settings = ( {maxWeight} ) => {
   const handleSubmitRearWeight = async () =>
   {
     try {
-      const response = await fetch('http://192.168.100.139:8020/set-rear-weight', {
+      const response = await fetch('http://localhost:8020/set-rear-weight', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ const Settings = ( {maxWeight} ) => {
   const handleSubmitCropFillRate = async () =>
   {
     try {
-      const response = await fetch('http://192.168.100.139:8020/set-crop-fill-rate', {
+      const response = await fetch('http://localhost:8020/set-crop-fill-rate', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
