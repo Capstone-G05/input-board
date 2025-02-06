@@ -12,7 +12,7 @@ const Settings = ( {maxWeight} ) => {
   const defaultPTOValue = 1000;
   const minPTO = 0;
   const maxPTO = 2000;
-  const defaultWeight = 1000.0;
+  const defaultWeight = maxWeight/2;
 
   // DEFAULT SETTINGS ------------------------------------------------------------------------------------------
   const [isOpen, setIsOpen] = useState(false);
@@ -38,12 +38,12 @@ const Settings = ( {maxWeight} ) => {
       });
 
       const data = await response.json();
-      console.log('PTO set:', data);
+      //console.log('PTO set:', data);
       //alert('PTO successfully set.');
     } catch (error) 
     {
-      console.error('Error setting PTO:', error);
-      alert('Failed to set PTO. Check console for details.');
+      //console.error('Error setting PTO:', error);
+      //alert('Failed to set PTO. Check console for details.');
     }
   };
   
@@ -53,22 +53,54 @@ const Settings = ( {maxWeight} ) => {
 
   const handleWeightChange = (delta) => 
   {
-    // Back Loaded
-    if (loadPosition == 0)
+    //const startTime = performance.now(); <- timing
+
+    // Maximum weight for each side
+    const maxAllowedWeight = maxWeight / 2; 
+    
+    // Allows us to modify their values within the rear/front functions
+    let frontDelta, rearDelta;
+  
+    // Back loaded
+    if (loadPosition === 0) 
     {
-      setFrontWeight(frontWeight + (1/3)*delta*cropFillRate)
-      setRearWeight(rearWeight + (2/3)*delta*cropFillRate)
-    }
-    else if (loadPosition == 2)
+      frontDelta = (1 / 3) * delta * cropFillRate;
+      rearDelta = (2 / 3) * delta * cropFillRate;
+    } 
+    // Front loaded
+    else if (loadPosition === 2) 
     {
-      setFrontWeight(frontWeight + (2/3)*delta*cropFillRate)
-      setRearWeight(rearWeight + (1/3)*delta*cropFillRate)
+      frontDelta = (2 / 3) * delta * cropFillRate;
+      rearDelta = (1 / 3) * delta * cropFillRate;
+    } 
+    else 
+    // Middle
+    {
+      frontDelta = (1 / 2) * delta * cropFillRate;
+      rearDelta = (1 / 2) * delta * cropFillRate;
     }
-    else{
-      setFrontWeight(frontWeight + (1/2)*delta*cropFillRate)
-      setRearWeight(rearWeight + (1/2)*delta*cropFillRate)
-    }
+  
+    // Apply constraints to prevent exceeding max weight or going below 0
+    setFrontWeight((prevFrontWeight) => 
+    {
+      const newFrontWeight = prevFrontWeight + frontDelta;
+      return Math.min(Math.max(newFrontWeight, 0), maxAllowedWeight);
+    });
+  
+    setRearWeight((prevRearWeight) => 
+    {
+      const newRearWeight = prevRearWeight + rearDelta;
+      return Math.min(Math.max(newRearWeight, 0), maxAllowedWeight);
+    });
+
+    /* Timing
+    const endTime = performance.now(); 
+    const elapsedTime = endTime - startTime; 
+  
+    console.log(`Weight change took: ${elapsedTime.toFixed(2)} ms`);
+    */
   };
+  
 
   const handleSubmitFrontWeight = async () =>
   {
@@ -124,7 +156,14 @@ const Settings = ( {maxWeight} ) => {
 
   const handleCropFillRateChange = (delta) => 
   {
-    setCropFillRate(cropFillRate + delta);
+    setCropFillRate((prevRate) => 
+    {
+      const newRate = prevRate + delta;
+      
+      // Prevent negative rate otherwise return rate
+      if (newRate < 0) return 0; 
+      return newRate;
+    });
   }
 
   const handleSubmitCropFillRate = async () =>

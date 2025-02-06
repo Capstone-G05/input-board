@@ -11,7 +11,7 @@ function App() {
 
   // DEFAULT STATE INITIALIZATION ------------------------------------------------------------------------------
   const [machineType, setSelectedMachine] = useState('Haulmaster');
-  const [machineSize, setSelectedSize] = useState('1100'); 
+  const [machineSize, setSelectedSize] = useState('2000'); 
 
   // MACHINE DEFINITIONS ---------------------------------------------------------------------------------------
   const machines = {
@@ -43,25 +43,23 @@ function App() {
           { label: 'CAT 4 Hitch', value: 'Standard' },
         ],
         '2000': [
-          { label: 'Width', value: '12\' 2”' },
-          { label: 'Overall Length', value: '32\' 3”' },
-          { label: 'Tank Length', value: '22\' 8”' },
-          { label: 'Loading Side Height', value: '10\' 2"' },
-          { label: 'Transport Height', value: '11\' 4”' },
-          { label: 'Auger Max Height', value: '14\' 9”' },
-          { label: 'Auger Max Reach', value: '9\'' },
-          { label: 'Ground Clearance (Standard Undercarriage)', value: '1\' 6”' },
-          { label: 'Empty Weight w/ Large Tracks', value: '30,500 lbs' },
-          { label: 'Empty Weight w/ 36" Transfer Tracks', value: '28,600 lbs' },
-          { label: 'Empty Weight w/ Tires & Wheels (1250 Tires)', value: '22,100 lbs' },
-          { label: 'Empty Weight w/ Row Crop Tandem (520 Tires)', value: '24,900 lbs' },
-          { label: 'Empty Weight w/ Steerable Inline Tandem', value: '26,400 lbs' },
-          { label: 'Tongue Weight', value: '4,000 lbs' },
-          { label: 'Unloading Auger', value: '22”' },
+          { label: 'Width', value: '14\'”' },
+          { label: 'Overall Length', value: '38\'' },
+          { label: 'Tank Length', value: '28\' 3”' },
+          { label: 'Loading Side Height', value: '11\' 4"' },
+          { label: 'Transport Height', value: '12\' 9”' },
+          { label: 'Auger Max Height', value: '16\' 4”' },
+          { label: 'Auger Max Reach', value: '9\' 8"' },
+          { label: 'Ground Clearance (Standard Undercarriage)', value: '1\' 3”' },
+          { label: 'Empty Weight w/ Large Tracks', value: '34,400 lbs' },
+          { label: 'Empty Weight w/ Steerable Inline Tandem', value: '33,600 lbs' },
+          { label: 'Tongue Weight', value: '4,400 lbs' },
+          { label: 'Unloading Auger', value: '24”' },
           { label: 'Horizontal Auger', value: '22"' },
           { label: 'Hydraulic Remotes', value: '4' },
-          { label: 'Required Tractor HP (KW)', value: '225(170)' },
-          { label: 'IF 1250/50R32 CFO', value: 'Standard' },
+          { label: 'Required Tractor HP (KW)', value: '400(300)' },
+          { label: 'LT378 Large Track (36" x 170")', value: 'Standard' },
+          { label: '5-Points Scale', value: 'Standard' },
           { label: 'CAT 4 Hitch', value: 'Standard' },
         ],
       },   
@@ -84,6 +82,7 @@ function App() {
 
   // MACHINE SWAP -----------------------------------------------------------------------------------------------
   const nextMachine = () => {
+    return; // remove this if multiple machines intended to be implemented
     const machineNames = Object.keys(machines);
     const currentIndex = machineNames.indexOf(machineType);
     const nextIndex = (currentIndex + 1) % machineNames.length;
@@ -92,6 +91,7 @@ function App() {
   };
 
   const prevMachine = () => {
+    return; // remove this if multiple machines intended to be implemented
     const machineNames = Object.keys(machines);
     const currentIndex = machineNames.indexOf(machineType);
     const prevIndex = (currentIndex - 1 + machineNames.length) % machineNames.length;
@@ -126,6 +126,7 @@ function App() {
   
   // SIZE SWAP --------------------------------------------------------------------------------------------------
   const nextSize = () => {
+    return; // remove this if multiple sizes intended to be implemented
     const availableSizes = machines[machineType].sizes;
     const currentIndex = availableSizes.indexOf(machineSize);
     const nextIndex = (currentIndex + 1) % availableSizes.length;
@@ -133,6 +134,7 @@ function App() {
   };
 
   const prevSize = () => {
+    return; // remove this if multiple sizes intended to be implemented
     const availableSizes = machines[machineType].sizes;
     const currentIndex = availableSizes.indexOf(machineSize);
     const prevIndex = (currentIndex - 1 + availableSizes.length) % availableSizes.length;
