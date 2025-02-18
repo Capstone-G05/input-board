@@ -24,7 +24,7 @@ body {
   align-items: center;
   width: 100%;
   text-align: center;
-  margin-top: -50px;
+  margin-top: -60px;
 }
 
 /* Elmer's Logo at Top */
@@ -69,7 +69,7 @@ body {
 }
 
 .left-arrow {
-  transform: rotate(180deg);
+  transform: translateY(-1px) rotate(180deg);
 }
 
 /* Arrow Styling */
@@ -84,12 +84,6 @@ body {
   padding: 10px; 
 }
 
-/* Arrow Hover Effect */
-.type-arrow-button:hover {
-  transform: scale(1.2);
-  color: #333;
-}
-
 /* Arrow Styling */
 .size-arrow-button {
   background-color: transparent;
@@ -100,12 +94,7 @@ body {
   cursor: pointer;
   transition: transform 0.3s;
   padding: 10px; 
-}
 
-/* Arrow Hover Effect */
-.size-arrow-button:hover {
-  transform: scale(1.2);
-  color: #333;
 }
 
 /* Bottom Section Horizontal Wrap */
