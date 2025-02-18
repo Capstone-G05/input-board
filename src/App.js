@@ -146,9 +146,6 @@ function App() {
   // PAGE LAYOUT ------------------------------------------------------------------------------------------------
   return (
     <div className="App">
-
-      <Settings maxWeight = {maxWeight}/>
-
       <header className="App-header">
         {/* Elmers Logo Styling */}
         <img src = {elmersLogo} alt = "Elmer's Manufacturing Logo" className = "title-image" />
@@ -170,15 +167,25 @@ function App() {
           <button className = "main-arrow-button" onClick = {nextSize}>→</button>
         </div>
 
-        {/* Display Image and Specifications Styling */}
-        <div className = "carousel-content">
-          <div className = "image-container">
-            <img
-              className = "image-size"
-              src = {machines[machineType].image}
-              alt = {machineType}
-            />
+        {/* Bottom Section */}
+        <div className = "bottom-container">
+
+          {/* Image & Start Button */}
+          <div className = "image-button-container">
+            <div className = "image-container">
+              <img
+                className = "image-size"
+                src = {machines[machineType].image}
+                alt = {machineType}
+              />
+            </div>
+
+            <div className = "button-container">
+              <Settings maxWeight={maxWeight} />
+            </div>
           </div>
+
+          {/* Specifications */}
           <div className = "specifications-panel">
             <h3>Specifications</h3>
             <ul>

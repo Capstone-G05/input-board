@@ -1,7 +1,5 @@
 // IMPORTS ------------------------------------------------------------------------------------------------------ 
 import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCog } from "@fortawesome/free-solid-svg-icons";
 import machineImage from "./load-placement.jpg"; 
 import "./Settings.css";
 
@@ -224,23 +222,23 @@ const Settings = ( {maxWeight} ) => {
 
   // PAGE LAYOUT ----------------------------------------------------------------------------------------------
   return (
-
-    // Settings Icon
     <div className = "settings-container">
-      <button className = "settings-button" onClick = {togglePopup}>
-        <FontAwesomeIcon icon = {faCog} />
+      {/* Start Simulation Button */}
+      <button className="start-simulation-button" onClick={togglePopup}>
+        Start Simulation
       </button>
 
       {/* Popup Window Opened */}
       {isOpen && (
         <div className = "popup">
+
+          {/* Title */}
+          <div className = "popup-title">Parameter Setup</div>
+
           <div className = "popup-content">
 
-            {/* Title */}
-            <div className = "popup-title">Parameter Setup</div>
-
-            {/* Top Section: Weight, PTO, Crop Fill Rate */}
-            <div className = "top-section">
+            {/* Left Section: Weight, PTO, Crop Fill Rate */}
+            <div className = "left-section">
 
               {/* Weight */}
               <div className = "weight-section">
@@ -267,12 +265,14 @@ const Settings = ( {maxWeight} ) => {
                   onChange = {handlePtoChange}
                   className = "pto-slider"
                 />
-                <button
-                  className = {`pto-toggle-button ${ptoStatus ? "pto-on" : "pto-off"}`}
-                  onClick = {handleSubmitPTO}
-                >
-                  {ptoStatus ? "PTO On" : "PTO Off"}
-                </button>
+                <div className = "pto-button-wrapper">
+                  <button
+                    className = {`pto-toggle-button ${ptoStatus ? "pto-on" : "pto-off"}`}
+                    onClick = {handleSubmitPTO}
+                  >
+                    {ptoStatus ? "PTO On" : "PTO Off"}
+                  </button>
+                </div>
               </div>
 
               {/* Crop Fill Rate */}
@@ -289,34 +289,40 @@ const Settings = ( {maxWeight} ) => {
               </div>
             </div>
 
-            {/* Load Position */}
-            <div className = "load-position-section">
-              <div className = "title">Load Position</div>
-              <input
-                type = "range"
-                min = "0"
-                max = "2"
-                value = {loadPosition}
-                onChange = {handleLoadPositionChange}
-                className = "load-position-slider"
-              />
-              <div className = "load-position-label">{getLoadPositionLabel()}</div>
+            {/* Right Section */}
+            <div className = "right-section">
+              {/* Load Position */}
+              <div className = "load-position-section">
+                <div className = "title">Load Position</div>
+                <input
+                  type = "range"
+                  min = "0"
+                  max = "2"
+                  value = {loadPosition}
+                  onChange = {handleLoadPositionChange}
+                  className = "load-position-slider"
+                />
+                <div className = "load-position-label">{getLoadPositionLabel()}</div>
+              </div>
+
+              {/* Arrows and Machine Image */}
+              <div className = "arrow-container">
+                <button className = {`arrow-button front-arrow ${loadPosition === 0 ? "visible" : "invisible"}`}>▼</button>
+                <button className = {`arrow-button middle-arrow ${loadPosition === 1 ? "visible" : "invisible"}`}>▼</button>
+                <button className = {`arrow-button back-arrow ${loadPosition === 2 ? "visible" : "invisible"}`}>▼</button>
+              </div>
+
+              <div className = "machine-image-container">
+                <img src = {machineImage} alt = "Machine" className = "machine-image" />
+              </div>
             </div>
 
-            {/* Arrows and Machine Image */}
-            <div className = "arrow-container">
-              <button className = {`arrow-button front-arrow ${loadPosition === 0 ? "visible" : "invisible"}`}>▼</button>
-              <button className = {`arrow-button middle-arrow ${loadPosition === 1 ? "visible" : "invisible"}`}>▼</button>
-              <button className = {`arrow-button back-arrow ${loadPosition === 2 ? "visible" : "invisible"}`}>▼</button>
+            {/* Close Button Wrapper */}
+            <div className="popup-footer">
+              <button className="close-button" onClick={togglePopup}>
+                Close
+              </button>
             </div>
-
-            <div className = "machine-image-container">
-              <img src = {machineImage} alt = "Machine" className = "machine-image" />
-            </div>
-
-            <button className = "close-button" onClick = {togglePopup}>
-              Close
-            </button>
           </div>
         </div>
       )}
