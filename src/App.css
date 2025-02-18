@@ -24,6 +24,7 @@ body {
   align-items: center;
   width: 100%;
   text-align: center;
+  margin-top: -10px;
 }
 
 /* Elmer's Logo at Top */
@@ -58,6 +59,7 @@ body {
   justify-content: center;
   align-items: center;
   font-size: 18px;
+  margin-top: -7px;
 }
 
 /* Machine Name Formatting */
@@ -70,7 +72,7 @@ body {
 }
 
 /* Arrow Styling */
-.main-arrow-button {
+.type-arrow-button {
   background-color: transparent;
   border: none;
   color: black;
@@ -82,7 +84,25 @@ body {
 }
 
 /* Arrow Hover Effect */
-.main-arrow-button:hover {
+.type-arrow-button:hover {
+  transform: scale(1.2);
+  color: #333;
+}
+
+/* Arrow Styling */
+.size-arrow-button {
+  background-color: transparent;
+  border: none;
+  color: black;
+  font-size: 20px; 
+  font-weight: 600; 
+  cursor: pointer;
+  transition: transform 0.3s;
+  padding: 10px; 
+}
+
+/* Arrow Hover Effect */
+.size-arrow-button:hover {
   transform: scale(1.2);
   color: #333;
 }
@@ -101,7 +121,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 5px;
 }
 .image-container {
   flex: 1;
@@ -110,6 +129,7 @@ body {
   align-items: center;
   padding-right: 10px; 
   padding-left: 20px;
+  margin-top: -10px;
 }
 .image-size {
   width: 80%;
