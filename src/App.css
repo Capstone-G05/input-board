@@ -87,11 +87,6 @@ body {
   color: #333;
 }
 
-/* Machine Size Arrows */
-.size-carousel .arrow-button {
-  font-size: 30px; 
-}
-
 /* Bottom Section Horizontal Wrap */
 .bottom-container {
   display: flex;
@@ -106,7 +101,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 5px;
 }
 .image-container {
   flex: 1;
@@ -125,7 +120,7 @@ body {
 .button-container {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 .start-simulation-button {
   padding: 12px 20px;
@@ -150,7 +145,7 @@ body {
 }
 .specifications-panel h3 {
   font-size: 30px; 
-  margin-top: 0px;
+  margin-top: -15px;
   margin-bottom: 25px;
 }
 .specifications-panel ul {

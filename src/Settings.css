@@ -54,21 +54,24 @@
   font-size: 28px;
   font-weight: bold;
   margin-bottom: 10px;
-  justify-content: center;
+}
+
+.weight-section, .crop-fill-rate-section, .pto-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%; 
 }
 
 /* Values */
 .weight-value, .crop-fill-value, .pto-value, .load-position-label {
   font-size: 20px;
   margin: 10px 5px;
-  justify-content: center;
 }
 
 /* +/- Buttons */
 .buttons {
   display: flex;
-  justify-content: center;
-  align-items: center;
 }
 .buttons button {
   padding: 5px 10px;
@@ -92,7 +95,6 @@
   color: white;
   border: none;
   cursor: pointer;
-  justify-content: center;
 }
 
 /* PTO Toggling */
@@ -114,6 +116,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 5px;
 }
 
 /* Load Position Slider */
