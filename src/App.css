@@ -18,15 +18,10 @@ body {
 
 /* Header */
 .App-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  margin-top: 25px;
   display: flex;
   flex-direction: column;
   justify-content: center; 
   align-items: center;
-  height: 100%;
   width: 100%;
   text-align: center;
 }

@@ -149,56 +149,56 @@ function App() {
       <header className="App-header">
         {/* Elmers Logo Styling */}
         <img src = {elmersLogo} alt = "Elmer's Manufacturing Logo" className = "title-image" />
-        
-        {/* Divider Styling */}
-        <div className = "divider"></div>
-
-        {/* Machine Selection Styling */}
-        <div className = "machine-carousel">
-          <button className = "main-arrow-button" onClick = {prevMachine}>←</button>
-          <span className = "machine-name">{machineType}</span>
-          <button className = "main-arrow-button" onClick = {nextMachine}>→</button>
-        </div>
-
-        {/* Size Selection Styling */}
-        <div className = "size-carousel">
-          <button className = "main-arrow-button" onClick = {prevSize}>←</button>
-          <span className = "size-name">{machineSize}</span>
-          <button className = "main-arrow-button" onClick = {nextSize}>→</button>
-        </div>
-
-        {/* Bottom Section */}
-        <div className = "bottom-container">
-
-          {/* Image & Start Button */}
-          <div className = "image-button-container">
-            <div className = "image-container">
-              <img
-                className = "image-size"
-                src = {machines[machineType].image}
-                alt = {machineType}
-              />
-            </div>
-
-            <div className = "button-container">
-              <Settings maxWeight={maxWeight} />
-            </div>
-          </div>
-
-          {/* Specifications */}
-          <div className = "specifications-panel">
-            <h3>Specifications</h3>
-            <ul>
-              {machines[machineType].specifications[machineSize].map((spec, index) => (
-                <li key = {index}>
-                  <span className = "spec-label">{spec.label}:</span> 
-                  <span className = "spec-value">{spec.value}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
       </header>
+
+      {/* Divider Styling */}
+      <div className = "divider"></div>
+
+      {/* Machine Selection Styling */}
+      <div className = "machine-carousel">
+        <button className = "main-arrow-button" onClick = {prevMachine}>←</button>
+        <span className = "machine-name">{machineType}</span>
+        <button className = "main-arrow-button" onClick = {nextMachine}>→</button>
+      </div>
+
+      {/* Size Selection Styling */}
+      <div className = "size-carousel">
+        <button className = "main-arrow-button" onClick = {prevSize}>←</button>
+        <span className = "size-name">{machineSize}</span>
+        <button className = "main-arrow-button" onClick = {nextSize}>→</button>
+      </div>
+
+      {/* Bottom Section */}
+      <div className = "bottom-container">
+
+        {/* Image & Start Button */}
+        <div className = "image-button-container">
+          <div className = "image-container">
+            <img
+              className = "image-size"
+              src = {machines[machineType].image}
+              alt = {machineType}
+            />
+          </div>
+
+          <div className = "button-container">
+            <Settings maxWeight={maxWeight} />
+          </div>
+        </div>
+
+        {/* Specifications */}
+        <div className = "specifications-panel">
+          <h3>Specifications</h3>
+          <ul>
+            {machines[machineType].specifications[machineSize].map((spec, index) => (
+              <li key = {index}>
+                <span className = "spec-label">{spec.label}:</span> 
+                <span className = "spec-value">{spec.value}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }

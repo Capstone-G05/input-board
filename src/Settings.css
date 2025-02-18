@@ -54,12 +54,14 @@
   font-size: 28px;
   font-weight: bold;
   margin-bottom: 10px;
+  justify-content: center;
 }
 
 /* Values */
 .weight-value, .crop-fill-value, .pto-value, .load-position-label {
   font-size: 20px;
   margin: 10px 5px;
+  justify-content: center;
 }
 
 /* +/- Buttons */
@@ -90,6 +92,7 @@
   color: white;
   border: none;
   cursor: pointer;
+  justify-content: center;
 }
 
 /* PTO Toggling */
@@ -108,7 +111,6 @@
 
 /* Load Position Container */
 .load-position-section {
-  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
