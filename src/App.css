@@ -21,6 +21,7 @@ body {
   position: fixed;
   top: 0;
   left: 0;
+  margin-top: 25px;
   display: flex;
   flex-direction: column;
   justify-content: center; 
@@ -103,7 +104,6 @@ body {
   align-items: flex-start;
   width: 100%;
   padding: 20px;
-  margin-top: 20px;
 }
 
 /* Machine Image */
