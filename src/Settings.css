@@ -29,7 +29,7 @@
   height: 1px;
   background-color: #272727;
   margin-top: 5px; 
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 /* Popup Content (Left/Right Layout) */
@@ -42,7 +42,7 @@
 /* Left Section */
 .left-section {
   width: 33%;
-  margin-right: 60px;
+  margin-right: 90px;
   display: flex;
   flex-direction: column; 
   align-items: center; 
@@ -51,7 +51,7 @@
 /* Right Section */
 .right-section {
   width: 66%; 
-  margin-left: 60px;
+  margin-left: 90px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -59,7 +59,7 @@
 
 /* Section Titles */
 .title {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: bold;
   margin-bottom: 5px;
 }
@@ -73,7 +73,7 @@
 
 /* Values */
 .weight-value, .crop-fill-value, .pto-value, .load-position-label {
-  font-size: 20px;
+  font-size: 18px;
   margin: 10px 5px;
 }
 
@@ -84,7 +84,7 @@
 .buttons button {
   padding: 5px 10px;
   margin: 0 5px;
-  font-size: 25px;
+  font-size: 18px;
   border: none;
   border-radius: 5px;
   background-color: #272727;
@@ -98,7 +98,7 @@
   margin-bottom: 20px;
   padding: 15px;
   border-radius: 5px;
-  font-size: 20px;
+  font-size: 17px;
   background-color: #272727;
   color: white;
   border: none;
@@ -125,6 +125,7 @@
   flex-direction: column;
   align-items: center;
   margin-top: 5px;
+  margin-bottom: -5px;
 }
 
 /* Load Position Slider */

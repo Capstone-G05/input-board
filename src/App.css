@@ -68,6 +68,10 @@ body {
   text-transform: uppercase;
 }
 
+.left-arrow {
+  transform: rotate(180deg);
+}
+
 /* Arrow Styling */
 .type-arrow-button {
   background-color: transparent;
