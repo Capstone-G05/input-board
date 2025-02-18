@@ -315,10 +315,8 @@ const Settings = ( {maxWeight} ) => {
               <div className = "machine-image-container">
                 <img src = {machineImage} alt = "Machine" className = "machine-image" />
               </div>
-            </div>
 
-            {/* Close Button Wrapper */}
-            <div className="popup-footer">
+              {/* Close Button */}
               <button className="close-button" onClick={togglePopup}>
                 Close
               </button>

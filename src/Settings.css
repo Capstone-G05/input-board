@@ -124,7 +124,6 @@
   display: flex;
   justify-content: space-between;
   width: 65%;
-  margin-top: 20px;
 }
 .arrow-button {
   font-size: 40px;
@@ -146,16 +145,4 @@
 .machine-image {
   width: 500px;
   height: auto;
-}
-
-/* Close Button Container */
-.popup-footer {
-  display: flex;
-  justify-content: center;
-  align-items: center; 
-  position: absolute;
-  bottom: 1px;
-  left: 50%;
-  transform: translateX(-50%);  
-  width: 100%;
 }
