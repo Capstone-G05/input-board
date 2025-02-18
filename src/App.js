@@ -156,16 +156,16 @@ function App() {
 
       {/* Machine Selection Styling */}
       <div className = "machine-carousel">
-        <button className = "type-arrow-button" onClick = {prevMachine}>←</button>
+        <button className = "type-arrow-button" onClick = {prevMachine}>&larr;</button>
         <span className = "machine-name">{machineType}</span>
-        <button className = "type-arrow-button" onClick = {nextMachine}>→</button>
+        <button className = "type-arrow-button" onClick = {nextMachine}>&rarr;</button>
       </div>
 
       {/* Size Selection Styling */}
       <div className = "size-carousel">
-        <button className = "size-arrow-button" onClick = {prevSize}>←</button>
+        <button className = "size-arrow-button" onClick = {prevSize}>&larr;</button>
         <span className = "size-name">{machineSize}</span>
-        <button className = "size-arrow-button" onClick = {nextSize}>→</button>
+        <button className = "size-arrow-button" onClick = {nextSize}>&rarr;</button>
       </div>
 
       {/* Bottom Section */}

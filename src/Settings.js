@@ -230,8 +230,9 @@ const Settings = ( {maxWeight} ) => {
 
       {/* Popup Window Opened */}
       {isOpen && (
+        
         <div className = "popup">
-
+          
           {/* Title */}
           <div className = "popup-title">Parameter Setup</div>
 
