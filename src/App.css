@@ -24,7 +24,7 @@ body {
   align-items: center;
   width: 100%;
   text-align: center;
-  margin-top: -10px;
+  margin-top: -25px;
 }
 
 /* Elmer's Logo at Top */
@@ -44,13 +44,11 @@ body {
   margin-top: 10px; 
 }
 
-/* Machine Selection w Arrows */
+/* Machine Type Label */
 .machine-carousel {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 30px;
-  font-weight: 600;
 }
 
 /* Arrow Selection w Arrows */
@@ -58,7 +56,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 18px;
   margin-top: -7px;
 }
 
@@ -94,7 +91,7 @@ body {
   background-color: transparent;
   border: none;
   color: black;
-  font-size: 20px; 
+  font-size: 25px; 
   font-weight: 600; 
   cursor: pointer;
   transition: transform 0.3s;
@@ -129,7 +126,7 @@ body {
   align-items: center;
   padding-right: 10px; 
   padding-left: 20px;
-  margin-top: -10px;
+  margin-top: -15px;
 }
 .image-size {
   width: 80%;

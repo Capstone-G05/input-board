@@ -235,6 +235,9 @@ const Settings = ( {maxWeight} ) => {
           {/* Title */}
           <div className = "popup-title">Parameter Setup</div>
 
+          {/* Divider Styling */}
+          <div className = "divider"></div>
+
           <div className = "popup-content">
 
             {/* Left Section: Weight, PTO, Crop Fill Rate */}
