@@ -102,7 +102,7 @@ function App() {
   const handleSubmitMachineSwap = async () =>
   {
     try {
-      const response = await fetch('http://localhost:8020/set-machine-type', {
+      const response = await fetch('http://10.42.0.1:8000/set-machine-type', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
