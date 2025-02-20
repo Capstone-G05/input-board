@@ -103,7 +103,7 @@ const Settings = ( {maxWeight} ) => {
   const handleSubmitFrontWeight = async () =>
   {
     try {
-      const response = await fetch('http://10.42.0.1:8000/set-front-weight', {
+      const response = await fetch('http://10.42.0.1:8000/weight-front', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ const Settings = ( {maxWeight} ) => {
   const handleSubmitRearWeight = async () =>
   {
     try {
-      const response = await fetch('http://10.42.0.1:8000/set-rear-weight', {
+      const response = await fetch('http://10.42.0.1:8000/weight-rear', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -167,7 +167,7 @@ const Settings = ( {maxWeight} ) => {
   const handleSubmitCropFillRate = async () =>
   {
     try {
-      const response = await fetch('http://10.42.0.1:8000/set-crop-fill-rate', {
+      const response = await fetch('http://10.42.0.1:8000/crop-fill-rate', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
