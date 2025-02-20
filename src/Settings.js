@@ -1,6 +1,6 @@
 // IMPORTS ------------------------------------------------------------------------------------------------------ 
 import React, { useState, useEffect } from "react";
-import machineImage from "./load-placement.jpg"; 
+import machineImage from "./load-placement.jpg";
 import "./Settings.css";
 
 // SETTINGS -----------------------------------------------------------------------------------------------------
@@ -12,133 +12,123 @@ const Settings = ( {maxWeight} ) => {
   const maxPTO = 2000;
   const defaultWeight = maxWeight/2;
 
-  // DEFAULT SETTINGS ------------------------------------------------------------------------------------------
+  const host = process.env.REACT_APP_HOST || "localhost";
+  const port = process.env.REACT_APP_PORT || 8000;
+
+  // DEFAULT SETTINGS -----------------.env.example-------------------------------------------------------------------------
   const [isOpen, setIsOpen] = useState(false);
   const [loadPosition, setLoadPosition] = useState(1);
-  const [ptoRPM, setPtoRPM] = useState(defaultPTOValue); 
-  const [ptoStatus, setPtoStatus] = useState(false); 
+  const [ptoRPM, setPtoRPM] = useState(defaultPTOValue);
+  const [ptoStatus, setPtoStatus] = useState(false);
   const [frontWeight, setFrontWeight] = useState(defaultWeight/2);
   const [rearWeight, setRearWeight] = useState(defaultWeight/2);
-  const [cropFillRate, setCropFillRate] = useState(defaultCropFillRate); 
+  const [cropFillRate, setCropFillRate] = useState(defaultCropFillRate);
 
   // FUNCTIONS -------------------------------------------------------------------------------------------------
-  const handleSubmitPTO = async () => 
+  const handleSubmitPTO = async () =>
   {
     setPtoStatus(!ptoStatus)
-
     try {
-      const response = await fetch('http://10.42.0.1:8000/set-pto', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify( {value: !ptoStatus} ),
+      const response = await fetch(`http://${host}:${port}/pto-speed?value=${ptoStatus ? ptoRPM : 0}`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: "",
       });
-
       const data = await response.json();
-      //console.log('PTO set:', data);
-      //alert('PTO successfully set.');
-    } catch (error) 
-    {
-      //console.error('Error setting PTO:', error);
-      //alert('Failed to set PTO. Check console for details.');
+      console.log("PTO set: ", data);
+      // alert("PTO successfully set.");
+    } catch (error) {
+      console.error("Error setting PTO:", error);
+      // alert("Failed to set PTO. Check console for details.");
     }
   };
-  
+
   const togglePopup = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleWeightChange = (delta) => 
+  const handleWeightChange = (delta) =>
   {
     //const startTime = performance.now(); <- timing
 
     // Maximum weight for each side
-    const maxAllowedWeight = maxWeight / 2; 
-    
+    const maxAllowedWeight = maxWeight / 2;
+
     // Allows us to modify their values within the rear/front functions
     let frontDelta, rearDelta;
-  
+
     // Back loaded
-    if (loadPosition === 0) 
+    if (loadPosition === 0)
     {
       frontDelta = (1 / 3) * delta * cropFillRate;
       rearDelta = (2 / 3) * delta * cropFillRate;
-    } 
+    }
     // Front loaded
-    else if (loadPosition === 2) 
+    else if (loadPosition === 2)
     {
       frontDelta = (2 / 3) * delta * cropFillRate;
       rearDelta = (1 / 3) * delta * cropFillRate;
-    } 
-    else 
+    }
+    else
     // Middle
     {
       frontDelta = (1 / 2) * delta * cropFillRate;
       rearDelta = (1 / 2) * delta * cropFillRate;
     }
-  
+
     // Apply constraints to prevent exceeding max weight or going below 0
-    setFrontWeight((prevFrontWeight) => 
+    setFrontWeight((prevFrontWeight) =>
     {
       const newFrontWeight = prevFrontWeight + frontDelta;
       return Math.min(Math.max(newFrontWeight, 0), maxAllowedWeight);
     });
-  
-    setRearWeight((prevRearWeight) => 
+
+    setRearWeight((prevRearWeight) =>
     {
       const newRearWeight = prevRearWeight + rearDelta;
       return Math.min(Math.max(newRearWeight, 0), maxAllowedWeight);
     });
 
     /* Timing
-    const endTime = performance.now(); 
-    const elapsedTime = endTime - startTime; 
-  
+    const endTime = performance.now();
+    const elapsedTime = endTime - startTime;
+
     console.log(`Weight change took: ${elapsedTime.toFixed(2)} ms`);
     */
   };
-  
+
 
   const handleSubmitFrontWeight = async () =>
   {
     try {
-      const response = await fetch('http://10.42.0.1:8000/weight-front', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify( {value: frontWeight} ),
+      const response = await fetch(`http://${host}:${port}/weight-front?value=${frontWeight}`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: "",
       });
-
       const data = await response.json();
-      // -> console.log('Front Weight set:', data);
-      //alert('Front Weight successfully set.');
-    } catch (error) 
-    {
-      // -> console.error('Error setting Front Weight:', error);
-      // -> alert('Failed to set Front Weight. Check console for details.');
+      console.log("Front Weight set: ", data);
+      // alert("Front Weight successfully set.");
+    } catch (error) {
+      console.error("Error setting Front Weight: ", error);
+      // alert("Failed to set Front Weight. Check console for details.");
     }
   };
 
   const handleSubmitRearWeight = async () =>
   {
     try {
-      const response = await fetch('http://10.42.0.1:8000/weight-rear', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify( {value: rearWeight} ),
+      const response = await fetch(`http://${host}:${port}/weight-rear?value=${rearWeight}`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: "",
       });
-
       const data = await response.json();
-      // -> console.log('Rear Weight set:', data);
-      //alert('Rear Weight successfully set.');
-    } catch (error) 
-    {
-      // -> console.error('Error setting Rear Weight:', error);
-      // -> alert('Failed to set Rear Weight. Check console for details.');
+      console.log("Rear Weight set: ", data);
+      // alert("Rear Weight successfully set.");
+    } catch (error) {
+      console.error("Error setting Rear Weight: ", error);
+      // alert("Failed to set Rear Weight. Check console for details.");
     }
   };
 
@@ -152,14 +142,14 @@ const Settings = ( {maxWeight} ) => {
     handleSubmitRearWeight();
   }, [rearWeight]);
 
-  const handleCropFillRateChange = (delta) => 
+  const handleCropFillRateChange = (delta) =>
   {
-    setCropFillRate((prevRate) => 
+    setCropFillRate((prevRate) =>
     {
       const newRate = prevRate + delta;
-      
+
       // Prevent negative rate otherwise return rate
-      if (newRate < 0) return 0; 
+      if (newRate < 0) return 0;
       return newRate;
     });
   }
@@ -167,26 +157,22 @@ const Settings = ( {maxWeight} ) => {
   const handleSubmitCropFillRate = async () =>
   {
     try {
-      const response = await fetch('http://10.42.0.1:8000/crop-fill-rate', {
+      const response = await fetch(`http://${host}:${port}/crop-fill-rate?value=${cropFillRate}`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify( {value: cropFillRate} ),
+        headers: {"Content-Type": "application/json"},
+        body: "",
       });
-
       const data = await response.json();
-      // -> console.log('Crop Fill Rate set:', data);
-      //alert('Crop Fill Rate successfully set.');
-    } catch (error) 
-    {
-      // -> console.error('Error setting Crop Fill Rate:', error);
-      // -> alert('Failed to set Crop Fill Rate. Check console for details.');
+      console.log("Crop Fill Rate set: ", data);
+      // alert("Crop Fill Rate successfully set.");
+    } catch (error) {
+      console.error("Error setting Crop Fill Rate: ", error);
+      // alert("Failed to set Crop Fill Rate. Check console for details.");
     }
   };
 
   useEffect(() => {
-    //console.log("Crop Fill Rate Updated: ", cropFillRate);
+    // console.log("Crop Fill Rate Updated: ", cropFillRate);
     handleSubmitCropFillRate();
   }, [cropFillRate]);
 
@@ -230,9 +216,9 @@ const Settings = ( {maxWeight} ) => {
 
       {/* Popup Window Opened */}
       {isOpen && (
-        
+
         <div className = "popup">
-          
+
           {/* Title */}
           <div className = "popup-title">Parameter Setup</div>
 

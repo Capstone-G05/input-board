@@ -2,16 +2,19 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Settings from "./Settings";
-import haulmasterImage from './haulmaster.png'; 
-import wolverineImage from './wolverine.png'; 
-import elmersLogo from './elmers.jpg'; 
+import haulmasterImage from './haulmaster.png';
+import wolverineImage from './wolverine.png';
+import elmersLogo from './elmers.jpg';
 
 // APP ---------------------------------------------------------------------------------------------------------
 function App() {
 
+  const host = process.env.REACT_APP_HOST || "localhost";
+  const port = process.env.REACT_APP_PORT || 8000;
+
   // DEFAULT STATE INITIALIZATION ------------------------------------------------------------------------------
   const [machineType, setSelectedMachine] = useState('Haulmaster');
-  const [machineSize, setSelectedSize] = useState('2000'); 
+  const [machineSize, setSelectedSize] = useState('2000');
 
   // MACHINE DEFINITIONS ---------------------------------------------------------------------------------------
   const machines = {
@@ -62,7 +65,7 @@ function App() {
           { label: '5-Points Scale', value: 'Standard' },
           { label: 'CAT 4 Hitch', value: 'Standard' },
         ],
-      },   
+      },
     },
     Wolverine: {
       sizes: ['1500'],
@@ -102,28 +105,25 @@ function App() {
   const handleSubmitMachineSwap = async () =>
   {
     try {
-      const response = await fetch('http://10.42.0.1:8000/set-machine-type', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify( {value: machineType} ),
+      const response = await fetch(`http://${host}:${port}/set-machine-type?value=${machineType}`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: "",
       });
-
       const data = await response.json();
-      // -> console.log('Machine Type set:', data);
-      //alert('Machine Type successfully set.');
-    } catch (error) 
+      console.log("Machine Type set: ", data);
+      // alert("Machine Type successfully set.");
+    } catch (error)
     {
-      // -> console.error('Error setting Machine Type:', error);
-      // -> alert('Failed to set Machine Type. Check console for details.');
+      console.error("Error setting Machine Type:", error);
+      // alert("Failed to set Machine Type. Check console for details.");
     }
   };
 
   useEffect(() => {
       handleSubmitMachineSwap();
     }, [machineType]);
-  
+
   // SIZE SWAP --------------------------------------------------------------------------------------------------
   const nextSize = () => {
     return; // remove this if multiple sizes intended to be implemented
@@ -192,7 +192,7 @@ function App() {
           <ul>
             {machines[machineType].specifications[machineSize].map((spec, index) => (
               <li key = {index}>
-                <span className = "spec-label">{spec.label}:</span> 
+                <span className = "spec-label">{spec.label}:</span>
                 <span className = "spec-value">{spec.value}</span>
               </li>
             ))}
