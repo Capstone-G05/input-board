@@ -25,9 +25,9 @@ const Settings = ( {maxWeight} ) => {
   const [cropFillRate, setCropFillRate] = useState(defaultCropFillRate);
 
   // FUNCTIONS -------------------------------------------------------------------------------------------------
-  const handleSubmitPTO = async () =>
+  const handleSubmitPTO = async (status) =>
   {
-    setPtoStatus(!ptoStatus)
+    setPtoStatus(status)
     try {
       const response = await fetch(`http://${host}:${port}/pto-speed?value=${ptoStatus ? 0 : ptoRPM}`, {
         method: "POST",
@@ -45,7 +45,7 @@ const Settings = ( {maxWeight} ) => {
 
   const togglePopup = () => {
     setIsOpen(!isOpen);
-    handleSubmitPTO().then(() => {});
+    handleSubmitPTO(false).then(() => {});
   };
 
   const handleWeightChange = (delta) =>
@@ -259,7 +259,7 @@ const Settings = ( {maxWeight} ) => {
                 <div className = "pto-button-wrapper">
                   <button
                     className = {`pto-toggle-button ${ptoStatus ? "pto-on" : "pto-off"}`}
-                    onClick = {handleSubmitPTO}
+                    onClick = {() => handleSubmitPTO(!ptoStatus)}
                   >
                     {ptoStatus ? "PTO On" : "PTO Off"}
                   </button>
