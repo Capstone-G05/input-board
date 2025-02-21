@@ -29,7 +29,7 @@ const Settings = ( {maxWeight} ) => {
   {
     setPtoStatus(!ptoStatus)
     try {
-      const response = await fetch(`http://${host}:${port}/pto-speed?value=${ptoStatus ? ptoRPM : 0}`, {
+      const response = await fetch(`http://${host}:${port}/pto-speed?value=${!ptoStatus ? ptoRPM : 0}`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: "",
