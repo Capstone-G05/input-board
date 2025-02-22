@@ -1,0 +1,14 @@
+.fullscreen-button {
+    background: none;
+    border: none;
+    font-size: 55px;
+    cursor: pointer;
+    padding: 5px;
+    color: #333;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .fullscreen-button:hover {
+    transform: scale(1.1);
+    color: #000;
+  }
