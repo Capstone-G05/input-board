@@ -4,7 +4,7 @@ import Home from "./Home";
 import Settings from "./Settings"; 
 
 function App() {
-  const [maxWeight, setMaxWeight] = useState(999); // Default value
+  const [maxWeight, setMaxWeight] = useState(999);
 
   return (
     <Router>
