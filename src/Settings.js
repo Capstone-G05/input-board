@@ -1,368 +1,343 @@
 // IMPORTS ------------------------------------------------------------------------------------------------------ 
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+
+import React, {useState, useEffect} from "react";
+import {useNavigate, useLocation} from "react-router-dom";
 
 import "./Settings.css";
 import FullscreenToggle from "./FullscreenToggle";
 
-import machineImage from "./load-placement.jpg"; 
-import elmersLogo from './elmers.jpg';
+import machineImage from "./load-placement.jpg";
+import elmersLogo from "./elmers.jpg";
 
 // SETTINGS -----------------------------------------------------------------------------------------------------
+
 function Settings() {
 
-  // Navigation
-  const navigate = useNavigate(); 
-  const location = useLocation();
+    // Environment Variables
+    const host = process.env.REACT_APP_HOST || "localhost";
+    const port = process.env.REACT_APP_PORT || 8000;
 
-  const handleBack = () => {
-    navigate('/'); 
-  };
+    // Navigation
+    const navigate = useNavigate();
+    const location = useLocation();
 
-  // Pulling from Home.js
-  const { maxWeight, machineType } = location.state;
+    /* Navigate back to the main page */
+    const handleBack = () => {
+        navigate("/");
+    };
 
-  // CONSTANTS --------------------------------------------------------------------------------------------------
-  const cropFillRateValues = [1,5,10,25,50,100,250,500,1000,5000,10000];
-  const defaultPTOValue = 1000;
-  const minPTO = 0;
-  const maxPTO = 2000;
-  const defaultWeight = maxWeight/2;
+    // CONSTANTS --------------------------------------------------------------------------------------------------
 
-  // DEFAULT SETTINGS ------------------------------------------------------------------------------------------
-  const [loadPosition, setLoadPosition] = useState(1);
-  const [ptoRPM, setPtoRPM] = useState(defaultPTOValue); 
-  const [ptoStatus, setPtoStatus] = useState(true); 
-  const [frontWeight, setFrontWeight] = useState(defaultWeight/2);
-  const [rearWeight, setRearWeight] = useState(defaultWeight/2);
-  const [cropFillRate, setCropFillRate] = useState(cropFillRateValues[6]); 
+    const pollingInterval = 300;
 
-  // FUNCTIONS -------------------------------------------------------------------------------------------------
+    // From main page stats
+    const {maxWeight = 100000, machineType = "Haulmaster"} = location.state || {};
 
-  // Initialization
-  useEffect(() => {
-    handleSubmitCropFillRate();
-    handleSubmitFrontWeight();
-    handleSubmitRearWeight();
-    handleSubmitPTO();
-    handleSubmitMachine();
-  }, []);
+    // TODO: fetch from API
+    const cropFillRateValues = [1, 5, 10, 25, 50, 100, 250, 500, 1000, 5000, 10000];
+    const defaultPTOValue = 1000;
+    const minPTO = 0;
+    const maxPTO = 2000;
+    const defaultWeight = maxWeight / 2;
 
-  // From Home.js
-  const handleSubmitMachine = async () =>
-  {
-      try {
-      const response = await fetch('http://10.42.0.1:8000/set-machine-type', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify( {value: machineType} ),
-      });
+    // DEFAULT SETTINGS ------------------------------------------------------------------------------------------
 
-      const data = await response.json();
-      // -> console.log('Machine Type set:', data);
-      //alert('Machine Type successfully set.');
-      } catch (error) 
-      {
-      // -> console.error('Error setting Machine Type:', error);
-      // -> alert('Failed to set Machine Type. Check console for details.');
-      }
-  };
+    // TODO: fetch from API
+    const [loadPosition, setLoadPosition] = useState(1);
+    const [ptoRPM, setPtoRPM] = useState(defaultPTOValue);
+    const [ptoStatus, setPtoStatus] = useState(false);
+    const [frontWeight, setFrontWeight] = useState(defaultWeight / 2);
+    const [rearWeight, setRearWeight] = useState(defaultWeight / 2);
+    const [cropFillRate, setCropFillRate] = useState(cropFillRateValues[6]);
 
-  const handleWeightChange = (delta) => 
-  {
-    //const startTime = performance.now(); <- timing
+    // FUNCTIONS -------------------------------------------------------------------------------------------------
 
-    // Maximum weight for each side
-    const maxAllowedWeight = maxWeight / 2; 
-    
-    // Allows us to modify their values within the rear/front functions
-    let frontDelta, rearDelta;
-  
-    // Back loaded
-    if (loadPosition === 0) 
-    {
-      frontDelta = (1 / 3) * delta * cropFillRate;
-      rearDelta = (2 / 3) * delta * cropFillRate;
-    } 
-    // Front loaded
-    else if (loadPosition === 2) 
-    {
-      frontDelta = (2 / 3) * delta * cropFillRate;
-      rearDelta = (1 / 3) * delta * cropFillRate;
-    } 
-    else 
-    // Middle
-    {
-      frontDelta = (1 / 2) * delta * cropFillRate;
-      rearDelta = (1 / 2) * delta * cropFillRate;
+    // Initialization
+    useEffect(() => {
+        handleSubmitCropFillRate();
+        handleSubmitFrontWeight();
+        handleSubmitRearWeight();
+        handleSubmitPTO();
+        handleSubmitMachine();
+    }, []); // run once on 'mount'
+
+    /* Poll the values of front/rear weight from the API server */
+    useEffect(() => {
+        const fetchWeights = async () => {
+            try {
+                const frontResponse = await fetch(`http://${host}:${port}/weight-front`);
+                const rearResponse = await fetch(`http://${host}:${port}/weight-rear`);
+                if (frontResponse.ok && rearResponse.ok) {
+                    setFrontWeight(await frontResponse.json());
+                    setRearWeight(await rearResponse.json());
+                } else {
+                    console.error("Failed to fetch weights");
+                }
+            } catch (error) {
+                console.error(`Error fetching weights: ${error}`);
+            }
+        };
+        const interval = setInterval(fetchWeights, pollingInterval);
+        return () => clearInterval(interval);
+    }, []);
+
+
+    /* Generic handler for submitting POSTing data to the API server */
+    const handleSubmit = async (route, value) => {
+        try {
+            const startTime = performance.now();
+            const response = await fetch(`http://${host}:${port}/${route}?value=${value}`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+            });
+            const data = await response.json();
+            const endTime = performance.now();
+            console.log(`${route}: ${data} (took ${Math.round(endTime - startTime)}ms)`);
+        } catch (error) {
+            console.error(`${route}: ${error}`);
+        }
     }
-  
-    // Apply constraints to prevent exceeding max weight or going below 0
-    setFrontWeight((prevFrontWeight) => 
-    {
-      const newFrontWeight = prevFrontWeight + frontDelta;
-      return Math.min(Math.max(newFrontWeight, 0), maxAllowedWeight);
-    });
-  
-    setRearWeight((prevRearWeight) => 
-    {
-      const newRearWeight = prevRearWeight + rearDelta;
-      return Math.min(Math.max(newRearWeight, 0), maxAllowedWeight);
-    });
 
-    /* Timing
-    const endTime = performance.now(); 
-    const elapsedTime = endTime - startTime; 
-  
-    console.log(`Weight change took: ${elapsedTime.toFixed(2)} ms`);
-    */
-  };
+    /* Updated API with current machine type */
+    const handleSubmitMachine = () => {
+        handleSubmit("machine-type", machineType).then(() => {
+            // alert(`Machine Type: ${machineType}`);
+        })
+    };
 
-  const handleQuickLoad = () => {
-    setFrontWeight(maxWeight/2)
-    setRearWeight(maxWeight/2);
-  };
-  
-  const handleSubmitFrontWeight = async () =>
-  {
-    try {
-      const response = await fetch('http://10.42.0.1:8000/set-front-weight', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify( {value: frontWeight} ),
-      });
+    /* Update API with current front weight */
+    const handleSubmitFrontWeight = () => {
+        handleSubmit("weight-front", frontWeight).then(() => {
+            // alert(`Front Weight: ${frontWeight}`);
+        })
+    };
 
-      const data = await response.json();
-      // -> console.log('Front Weight set:', data);
-      //alert('Front Weight successfully set.');
-    } catch (error) 
-    {
-      // -> console.error('Error setting Front Weight:', error);
-      // -> alert('Failed to set Front Weight. Check console for details.');
+    /* Update API with current rear weight */
+    const handleSubmitRearWeight = () => {
+        handleSubmit("weight-rear", rearWeight).then(() => {
+            // alert(`Rear Weight: ${rearWeight}`);
+        })
+    };
+
+    /* Update API with current crop fill rate */
+    const handleSubmitCropFillRate = () => {
+        handleSubmit("crop-fill-rate", cropFillRate).then(() => {
+            // alert(`Crop Fill Rate: ${cropFillRate}`);
+        })
+    };
+
+    /* Update API with current PTO speed */
+    const handleSubmitPTO = () => {
+        handleSubmit("pto-speed", ptoStatus ? ptoRPM : 0).then(() => {
+            // alert(`PTO (${ptoStatus}): ${ptoRPM}`);
+        })
+    };
+
+    /* Observer for 'frontWeight' */
+    useEffect(() => {
+        handleSubmitFrontWeight();
+    }, [frontWeight]);
+
+    /* Observer for 'rearWeight' */
+    useEffect(() => {
+        handleSubmitRearWeight();
+    }, [rearWeight]);
+
+    /* Observer for 'cropFillRate' */
+    useEffect(() => {
+        handleSubmitCropFillRate();
+    }, [cropFillRate]);
+
+    /* Observer for 'ptoRPM' */
+    useEffect(() => {
+        handleSubmitPTO();
+    }, [ptoRPM]);
+
+    /* Observer for 'ptoStatus' */
+    useEffect(() => {
+        handleSubmitPTO();
+    }, [ptoStatus]);
+
+    /* onClick handler for PTO speed slider */
+    const handlePtoRpmChange = (event) => {
+        setPtoRPM(event.target.value);
+    };
+
+    /* onClick handler for PTO status button */
+    const handlePtoStatusChange = () => {
+        setPtoStatus((prevStatus) => !prevStatus);
+    };
+
+    /* onClick handler for load position slider */
+    const handleLoadPositionChange = (event) => {
+        setLoadPosition(Number(event.target.value));
+    };
+
+    /* onClick handler for weight +/- buttons */
+    const handleWeightChange = (delta) => {
+        const maxAllowedWeight = maxWeight / 2;
+        const minAllowedWeight = 0;
+        let frontDelta, rearDelta; // allows modification of values
+        switch (loadPosition) {
+            case 0: // rear
+                frontDelta = (1 / 3) * delta * cropFillRate;
+                rearDelta = (2 / 3) * delta * cropFillRate;
+                break;
+            case 1: // middle
+                frontDelta = (1 / 2) * delta * cropFillRate;
+                rearDelta = (1 / 2) * delta * cropFillRate;
+                break;
+            case 2: // front
+                frontDelta = (2 / 3) * delta * cropFillRate;
+                rearDelta = (1 / 3) * delta * cropFillRate;
+                break;
+            default:
+                console.warn(`Unhandled load position '${loadPosition}'`);
+                return;
+        }
+        // minAllowedWeight < newWeight < maxAllowedWeight
+        setFrontWeight((prevFrontWeight) => {
+            const newFrontWeight = prevFrontWeight + frontDelta;
+            return Math.round(Math.min(Math.max(newFrontWeight, minAllowedWeight), maxAllowedWeight));
+        });
+        setRearWeight((prevRearWeight) => {
+            const newRearWeight = prevRearWeight + rearDelta;
+            return Math.round(Math.min(Math.max(newRearWeight, minAllowedWeight), maxAllowedWeight));
+        });
+    };
+
+    /* onClick handler for crop fill rate +/- buttons */
+    const handleCropFillRateChange = (delta) => {
+        setCropFillRate((prevRate) => {
+            const currentIndex = cropFillRateValues.indexOf(prevRate);
+            // Increment or decrement the index
+            let newIndex = currentIndex + delta;
+            // Ensure the new index is within bounds
+            if (newIndex < 0) newIndex = 0;
+            if (newIndex >= cropFillRateValues.length) newIndex = cropFillRateValues.length - 1;
+            return cropFillRateValues[newIndex];
+        });
     }
-  };
 
-  const handleSubmitRearWeight = async () =>
-  {
-    try {
-      const response = await fetch('http://10.42.0.1:8000/set-rear-weight', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify( {value: rearWeight} ),
-      });
+    /* onClick handler for quick load button */
+    const handleQuickLoad = () => {
+        setFrontWeight(maxWeight / 2)
+        setRearWeight(maxWeight / 2);
+    };
 
-      const data = await response.json();
-      // -> console.log('Rear Weight set:', data);
-      //alert('Rear Weight successfully set.');
-    } catch (error) 
-    {
-      // -> console.error('Error setting Rear Weight:', error);
-      // -> alert('Failed to set Rear Weight. Check console for details.');
-    }
-  };
+    /* onClick handler for crop fill reset button */
+    const handleReset = () => {
+        setCropFillRate(cropFillRateValues[6]);
+    };
 
-  useEffect(() => {
-    //console.log("Weight Updated: ", weight);
-    handleSubmitFrontWeight();
-  }, [frontWeight]);
+    // PAGE LAYOUT ----------------------------------------------------------------------------------------------
+    return (
+        <div className="Settings">
 
-  useEffect(() => {
-    //console.log("Weight Updated: ", weight);
-    handleSubmitRearWeight();
-  }, [rearWeight]);
+            {/* Header */}
+            <header className="header">
+                <div className="header-content">
 
-  const handleCropFillRateChange = (delta) => 
-  {
-    setCropFillRate((prevRate) => 
-    {
-      const currentIndex = cropFillRateValues.indexOf(prevRate);
+                    {/* Back Button */}
+                    <div className="header-left">
+                        <button className="back-button" onClick={handleBack}>
+                            ←
+                        </button>
+                    </div>
 
-      // Increment or decrement the index
-      let newIndex = currentIndex + delta;
+                    {/* Elmers Logo Styling */}
+                    <img src={elmersLogo} alt="Elmer's Manufacturing Logo" className="title-image"/>
 
-      // Ensure the new index is within bounds
-      if (newIndex < 0) newIndex = 0;
-      if (newIndex >= cropFillRateValues.length) newIndex = cropFillRateValues.length - 1;
+                    {/* Full Screen Toggle */}
+                    <div className="header-right">
+                        <FullscreenToggle/>
+                    </div>
+                </div>
 
-      return cropFillRateValues[newIndex];
-    });
-  }
+                {/* Divider Styling */}
+                <div className="divider"></div>
+            </header>
 
-  const handleSubmitCropFillRate = async () =>
-  {
-    try {
-      const response = await fetch('http://10.42.0.1:8000/set-crop-fill-rate', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify( {value: cropFillRate} ),
-      });
+            {/* Main Page Content */}
+            <div className="page-content">
 
-      const data = await response.json();
-      // -> console.log('Crop Fill Rate set:', data);
-      //alert('Crop Fill Rate successfully set.');
-    } catch (error) 
-    {
-      // -> console.error('Error setting Crop Fill Rate:', error);
-      // -> alert('Failed to set Crop Fill Rate. Check console for details.');
-    }
-  };
+                {/* Left Section: Weight, PTO, Crop Fill Rate */}
+                <div className="left-section">
 
-  useEffect(() => {
-    //console.log("Crop Fill Rate Updated: ", cropFillRate);
-    handleSubmitCropFillRate();
-  }, [cropFillRate]);
+                    {/* Weight */}
+                    <div className="weight-section">
+                        <div className="title">Weight</div>
+                        <div className="buttons">
+                            <button onClick={() => handleWeightChange(-1)}>-</button>
+                            <div className="weight-value">{frontWeight + rearWeight} kg</div>
+                            <button onClick={() => handleWeightChange(1)}>+</button>
+                        </div>
+                        <button className="quick-load-button" onClick={handleQuickLoad}>
+                            Quick Load
+                        </button>
+                    </div>
 
-  const handlePtoChange = (event) => {
-    setPtoRPM(event.target.value);
-  };
+                    {/* PTO */}
+                    <div className="pto-section">
+                        <div className="title">PTO</div>
+                        <div className="pto-value">{ptoRPM} RPM</div>
+                        <input
+                            type="range"
+                            min={minPTO}
+                            max={maxPTO}
+                            value={ptoRPM}
+                            onChange={handlePtoRpmChange}
+                            className="pto-slider"
+                        />
+                        <div className="pto-button-wrapper">
+                            <button
+                                className={`pto-toggle-button ${ptoStatus ? "pto-on" : "pto-off"}`}
+                                onClick={handlePtoStatusChange}
+                            >
+                                {ptoStatus ? "ON" : "OFF"}
+                            </button>
+                        </div>
+                    </div>
 
-  const handleSubmitPTO = async () => 
-  {
-    setPtoStatus(!ptoStatus)
+                    {/* Crop Fill Rate */}
+                    <div className="crop-fill-rate-section">
+                        <div className="title">Crop Fill Rate</div>
+                        <div className="buttons">
+                            <button onClick={() => handleCropFillRateChange(-1)}>-</button>
+                            <div className="crop-fill-value">{cropFillRate} kg</div>
+                            <button onClick={() => handleCropFillRateChange(1)}>+</button>
+                        </div>
+                        <button className="reset-button" onClick={handleReset}>
+                            Reset
+                        </button>
+                    </div>
+                </div>
 
-    try {
-      const response = await fetch('http://10.42.0.1:8000/set-pto', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify( {value: !ptoStatus} ),
-      });
+                {/* Right Section */}
+                <div className="right-section">
 
-      const data = await response.json();
-      //console.log('PTO set:', data);
-      //alert('PTO successfully set.');
-    } catch (error) 
-    {
-      //console.error('Error setting PTO:', error);
-      //alert('Failed to set PTO. Check console for details.');
-    }
-  };
+                    {/* Load Position */}
+                    <div className="load-position-section">
+                        <div className="title">Load Position</div>
+                        <input
+                            type="range"
+                            min="0"
+                            max="2"
+                            step="1"
+                            value={loadPosition}
+                            onChange={handleLoadPositionChange}
+                            className="load-position-slider"
+                        />
+                    </div>
 
-  const handleReset = () => {
-    setCropFillRate(cropFillRateValues[6]);
-  };
-
-  const handleLoadPositionChange = (event) => {
-    setLoadPosition(Number(event.target.value));
-  };
-
-  // PAGE LAYOUT ----------------------------------------------------------------------------------------------
-  return (
-    <div className = "Settings">
-        
-      {/* Header */}
-      <header className="header">
-        <div className = "header-content">
-
-          {/* Back Button */}
-          <div className = "header-left">
-            <button className="back-button" onClick={handleBack}>
-              ←
-            </button>
-          </div>
-
-          {/* Elmers Logo Styling */}
-          <img src = {elmersLogo} alt = "Elmer's Manufacturing Logo" className = "title-image" />
-
-          {/* Full Screen Toggle */}
-          <div className = "header-right">
-            <FullscreenToggle />
-          </div>
-        </div>
-
-        {/* Divider Styling */}
-        <div className = "divider"></div>
-      </header>
-
-      {/* Main Page Content */}
-      <div className = "page-content">
-
-        {/* Left Section: Weight, PTO, Crop Fill Rate */}
-        <div className = "left-section">
-
-          {/* Weight */}
-          <div className = "weight-section">
-            <div className = "title">Weight</div>
-            <div className = "buttons">
-              <button onClick={() => handleWeightChange(-1)}>-</button>
-              <div className = "weight-value">{frontWeight + rearWeight} kg</div>
-              <button onClick = {() => handleWeightChange(1)}>+</button>
+                    {/* Machine Image */}
+                    <div className="machine-image-container">
+                        <img src={machineImage} alt="Machine" className="machine-image"/>
+                    </div>
+                </div>
             </div>
-            <button className = "quick-load-button" onClick = {handleQuickLoad}>
-              Quick Load
-            </button>
-          </div>
-
-          {/* PTO */}
-          <div className = "pto-section">
-            <div className = "title">PTO</div>
-            <div className = "pto-value">{ptoRPM} RPM</div>
-            <input
-              type="range"
-              min = {minPTO}
-              max = {maxPTO}
-              value = {ptoRPM}
-              onChange = {handlePtoChange}
-              className = "pto-slider"
-            />
-            <div className = "pto-button-wrapper">
-              <button
-                className = {`pto-toggle-button ${ptoStatus ? "pto-on" : "pto-off"}`}
-                onClick = {handleSubmitPTO}
-              >
-                {ptoStatus ? "ON" : "OFF"}
-              </button>
-            </div>
-          </div>
-
-          {/* Crop Fill Rate */}
-          <div className = "crop-fill-rate-section">
-            <div className = "title">Crop Fill Rate</div>
-            <div className = "buttons">
-              <button onClick = {() => handleCropFillRateChange(-1)}>-</button>
-              <div className = "crop-fill-value">{cropFillRate} kg</div>
-              <button onClick = {() => handleCropFillRateChange(1)}>+</button>
-            </div>
-            <button className = "reset-button" onClick = {handleReset}>
-              Reset
-            </button>
-          </div>
         </div>
-
-        {/* Right Section */}
-        <div className = "right-section">
-
-          {/* Load Position */}
-          <div className = "load-position-section">
-            <div className = "title">Load Position</div>
-            <input
-              type = "range"
-              min = "0"
-              max = "2"
-              step = "1"
-              value = {loadPosition}
-              onChange = {handleLoadPositionChange}
-              className = "load-position-slider"
-            />
-          </div>
-
-          {/* Machine Image */}
-          <div className = "machine-image-container">
-            <img src = {machineImage} alt = "Machine" className = "machine-image" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 export default Settings;
