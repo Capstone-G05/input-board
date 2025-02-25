@@ -115,12 +115,13 @@ function Home() {
 
     const handleSubmitMachineSwap = async () => {
         try {
-            const response = await fetch(`http://${host}:${port}/machine-type?value=${machineType}`, {
+            const response = await fetch(`http://${host}:${port}/machine-type`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({"value": machineType})
             });
             const data = await response.json();
-            console.log(`machine-type: ${data}`);
+            console.log(`machine-type: ${data["MACHINE_TYPE"]}`);
         } catch (error) {
             console.error(`machine-type: ${error}`);
         }

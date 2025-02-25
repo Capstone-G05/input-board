@@ -68,8 +68,10 @@ function Settings() {
                 const frontResponse = await fetch(`http://${host}:${port}/weight-front`);
                 const rearResponse = await fetch(`http://${host}:${port}/weight-rear`);
                 if (frontResponse.ok && rearResponse.ok) {
-                    setFrontWeight(await frontResponse.json());
-                    setRearWeight(await rearResponse.json());
+                    const responseWeightFront = await frontResponse.json()
+                    const responseWeightRear = await rearResponse.json()
+                    setFrontWeight(responseWeightFront["WEIGHT_FRONT"]);
+                    setRearWeight(responseWeightRear["WEIGHT_REAR"]);
                 } else {
                     console.error("Failed to fetch weights");
                 }
@@ -84,15 +86,17 @@ function Settings() {
 
     /* Generic handler for submitting POSTing data to the API server */
     const handleSubmit = async (route, value) => {
+        // TODO: pass in param name (and replace regex to parse response)
         try {
             const startTime = performance.now();
-            const response = await fetch(`http://${host}:${port}/${route}?value=${value}`, {
+            const response = await fetch(`http://${host}:${port}/${route}`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({"value": value})
             });
             const data = await response.json();
             const endTime = performance.now();
-            console.log(`${route}: ${data} (took ${Math.round(endTime - startTime)}ms)`);
+            console.log(`${route}: ${data[route.toUpperCase().replace(/-/g, "_")]} (took ${Math.round(endTime - startTime)}ms)`);
         } catch (error) {
             console.error(`${route}: ${error}`);
         }
