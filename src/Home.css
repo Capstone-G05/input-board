@@ -101,7 +101,7 @@ body {
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
-  padding: 20px;
+  padding: 1vh;
   margin-top: 5vh;
 }
 
@@ -133,13 +133,20 @@ body {
 .start-simulation-button {
   padding: 12px 20px;
   font-size: 1.5rem;
-  background-color: green;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: 0.3s ease-in-out;
 }
+.start-simulation-button.active {
+  background-color: green;
+}
+.start-simulation-button.inactive {
+  background-color: red;
+  cursor: not-allowed;
+}
+
 
 /*Specifications Constraints */
 .specifications-panel {

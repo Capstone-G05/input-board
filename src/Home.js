@@ -1,6 +1,6 @@
 // IMPORTS ------------------------------------------------------------------------------------------------------
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {useNavigate} from "react-router-dom";
 
 import "./Home.css";
@@ -9,6 +9,8 @@ import FullscreenToggle from "./FullscreenToggle";
 import haulmasterImage from "./haulmaster.png";
 import wolverineImage from "./wolverine.png";
 import elmersLogo from "./elmers.jpg";
+
+import SimulationPowerProvider, {SimulationPower} from './SimulationPower';
 
 // HOME ---------------------------------------------------------------------------------------------------------
 
@@ -19,6 +21,8 @@ function Home() {
     const port = process.env.REACT_APP_PORT || 8000;
 
     const navigate = useNavigate();
+
+    const { simulationPower } = useContext(SimulationPower);
 
     // DEFAULT STATE INITIALIZATION ------------------------------------------------------------------------------
 
@@ -196,7 +200,7 @@ function Home() {
                 <div className="image-button-container">
                     <div className="image-container">
                         <img
-                            className="image-size"
+                            className = "image-size"
                             src={machines[machineType].image}
                             alt={machineType}
                         />
@@ -204,8 +208,9 @@ function Home() {
 
                     <div className="button-container">
                         <button
-                            className="start-simulation-button"
-                            onClick={() => navigate("/settings", {state: {maxWeight}})}>
+                            className = {`start-simulation-button ${simulationPower ? "active" : "inactive"}`}
+                            onClick={() => navigate("/settings", {state: {maxWeight}})}
+                            disabled = {!simulationPower}>
                             Start Simulation
                         </button>
                     </div>

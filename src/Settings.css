@@ -59,7 +59,7 @@
   width: 100%;
   display: flex;
   flex-direction: space-between;
-  margin-top: 5vh;
+  margin-top: 3vh;
 }
 
 /* Left Section */
@@ -97,7 +97,7 @@
 /* Values */
 .weight-value, .crop-fill-value, .pto-value, .load-position-label {
   font-size: 30px;
-  margin: 10px 5px;
+  margin: 1vh 1vh;
 }
 
 /* +/- Buttons */
@@ -106,7 +106,7 @@
 }
 .buttons button {
   padding: 5px 15px;
-  margin: 0 5px;
+  margin: 0 1vh;
   font-size: 30px;
   border: none;
   border-radius: 5px;
@@ -118,7 +118,7 @@
 /* Buttons */
 .quick-load-button, .reset-button, .pto-toggle-button, .close-button {
   margin-top: 1vh;
-  margin-bottom: 8vh;
+  margin-bottom: 5vh;
   padding: 15px;
   border-radius: 10px;
   font-size: 30px;

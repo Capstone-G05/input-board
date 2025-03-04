@@ -22,7 +22,8 @@ function Settings() {
     const location = useLocation();
 
     /* Navigate back to the main page */
-    const handleBack = () => {
+    const handleBack = () => 
+    {
         navigate("/");
     };
 
