@@ -6,7 +6,7 @@ import {useNavigate} from "react-router-dom";
 import "./Home.css";
 import FullscreenToggle from "./FullscreenToggle";
 
-import haulmasterImage from "./haulmaster.png";
+import haulmasterImage from "./haulmaster.jpg";
 import wolverineImage from "./wolverine.png";
 import elmersLogo from "./elmers.jpg";
 
