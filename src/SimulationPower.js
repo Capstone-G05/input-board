@@ -15,13 +15,14 @@ const SimulationPowerProvider = ({ children }) => {
   // Fetch simulation-power from API server
   const fetchSimulationPower = async () => {
     try {
-      const response = await fetch(`http://${host}:${port}/simulation-power`);
+      const response = await fetch(`http://${host}:${port}/online`);
       const data = await response.json();
 
-      setSimulationPower(data.isReady);
+      console.log(data)
+      setSimulationPower(data["ONLINE"]);
 
       // No sim power -> return to Home
-      if (!data.isReady) {
+      if (!data["ONLINE"]) {
         navigate('/');
       }
       
